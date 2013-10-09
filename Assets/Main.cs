@@ -18,12 +18,12 @@ public class Main : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		if (playerPrefab != null) {
-			GameObject.Instantiate(playerPrefab);
-		}
-		if (targetPrefab != null) {
-			GameObject.Instantiate(targetPrefab);
-		}
+//		if (playerPrefab != null) {
+//			GameObject.Instantiate(playerPrefab);
+//		}
+//		if (targetPrefab != null) {
+//			GameObject.Instantiate(targetPrefab);
+//		}
 	}
 	
 	// Update is called once per frame

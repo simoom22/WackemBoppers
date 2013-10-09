@@ -3,40 +3,52 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	private Transform trans;
+	private Camera cam;
+	private RuntimePlatform platform;
 	private Rigidbody rb;
-	public int speed = 1;
+	private Transform trans;
 	
-	//control stuff- platform detection
+	public int speed = 1;
 	
 	// Use this for initialization
 	void Start () {
+		cam = Camera.main;
+		platform = Application.platform;
+		Debug.Log(platform);
 		trans = transform;
 		rb = trans.rigidbody;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-		
+	void FixedUpdate () {
+		switch (platform) {
+		case RuntimePlatform.Android:
+			TouchControl();			
+			break;
+		default:
+			MouseControl();
+			break;
+		}
 	}
 	
-	void FixedUpdate () {
-		//directed movement - mouse only
-		var cam = Camera.main;
+	private void MouseControl() {
 		if (Input.GetMouseButton(1)) {
-			Ray inputRay = cam.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(inputRay.origin, inputRay.direction, out hit)) {
-				var dir = (hit.point - trans.position).normalized;
-				//dir.y = trans.position.y;
-				rb.AddForce(dir, ForceMode.Impulse);
-				
-//				var point = hit.point;
-//				point.y = 1;
-//				var step = speed * Time.deltaTime;
-//				trans.position = Vector3.Lerp(trans.position, point, step);
-			}
+			MoveGuy(Input.mousePosition);
+		}
+	}
+	
+	private void TouchControl() {
+		if (Input.touchCount > 0) {
+			MoveGuy(Input.GetTouch(0).position);
+		}
+	}
+	
+	private void MoveGuy(Vector3 toPosition) {
+		Ray inputRay = cam.ScreenPointToRay(toPosition);
+		RaycastHit hit;
+		if (Physics.Raycast(inputRay.origin, inputRay.direction, out hit)) {
+			var dir = (hit.point - trans.position).normalized;
+			//dir.y = trans.position.y;
+			rb.AddForce(dir, ForceMode.Impulse);
 		}
 	}
 }
